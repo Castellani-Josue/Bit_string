@@ -7,9 +7,10 @@ public class SimpleGeneticAlgorithm {
     private static final int tournamentSize = 5;
     private static final boolean elitism = true;
     public static byte[] solution;
-    private static final int maxGenerations = 100;
-
-    private static final String SELECTION_METHOD = "tournament"; // "tournament" or "roulette"
+    private static final int maxGenerations = 150;
+    private static final int min_gene_length = 8;
+    private static final int max_gene_length = 64;
+    private static final String selection_method = "roulette"; // "tournament" or "roulette"
 
 
     public boolean runAlgorithm(int populationSize, String solution) {
@@ -109,19 +110,31 @@ public class SimpleGeneticAlgorithm {
     }
 
 
-    protected static int getFitness(Individual individual) {
-        int fitness = 0;
+    protected static int getFitness(Individual individual)
+    {
         int minLength = Math.min(individual.getGeneLength(), solution.length);
-        for (int i = 0; i < minLength; i++) {
-            if (individual.getSingleGene(i) == solution[i]) {
-                fitness++;
+        int maxLength = Math.max(individual.getGeneLength(), solution.length);
+
+        int matchingBits = 0;
+        for (int i = 0; i < minLength; i++)
+        {
+            if (individual.getSingleGene(i) == solution[i])
+            {
+                matchingBits++;
             }
         }
-        return fitness;
+
+        int extraBits = maxLength - minLength;
+        double rawFitness = matchingBits - (extraBits / 2.0);
+
+        // Normalisation en pourcentage
+        double normalizedFitness = Math.max(0, rawFitness) / solution.length;
+
+        return (int) Math.round(normalizedFitness * 100);
     }
 
     protected int getMaxFitness() {
-        return solution.length;
+        return 100; // puisque maintenant la fitness est un pourcentage
     }
 
 
@@ -135,7 +148,7 @@ public class SimpleGeneticAlgorithm {
     private Individual selectParent(Population pop)
     {
 
-        if (SELECTION_METHOD.equalsIgnoreCase("tournament"))
+        if (selection_method.equalsIgnoreCase("tournament"))
         {
             return tournamentSelection(pop);
         } else {
