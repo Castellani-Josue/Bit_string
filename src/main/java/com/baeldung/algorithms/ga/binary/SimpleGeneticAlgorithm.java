@@ -6,17 +6,22 @@ public class SimpleGeneticAlgorithm {
     private static final double mutationRate = 0.025;
     private static final int tournamentSize = 5;
     private static final boolean elitism = true;
-    private static byte[] solution = new byte[64];
+    public static byte[] solution;
+    private static final int maxGenerations = 100;
+
+    private static final String SELECTION_METHOD = "tournament"; // "tournament" or "roulette"
+
 
     public boolean runAlgorithm(int populationSize, String solution) {
-        if (solution.length() != SimpleGeneticAlgorithm.solution.length) {
-            throw new RuntimeException("The solution needs to have " + SimpleGeneticAlgorithm.solution.length + " bytes");
-        }
+//        if (solution.length() != SimpleGeneticAlgorithm.solution.length) {
+//            throw new RuntimeException("The solution needs to have " + SimpleGeneticAlgorithm.solution.length + " bytes");
+//        }
         setSolution(solution);
         Population myPop = new Population(populationSize, true);
 
         int generationCount = 1;
-        while (myPop.getFittest().getFitness() < getMaxFitness()) {
+        while (myPop.getFittest().getFitness() < getMaxFitness() && generationCount <= maxGenerations)
+        {
             System.out.println("Generation: " + generationCount + " Correct genes found: " + myPop.getFittest().getFitness());
             myPop = evolvePopulation(myPop);
             generationCount++;
@@ -28,7 +33,8 @@ public class SimpleGeneticAlgorithm {
         return true;
     }
 
-    public Population evolvePopulation(Population pop) {
+    public Population evolvePopulation(Population pop)
+    {
         int elitismOffset;
         Population newPopulation = new Population(pop.getIndividuals().size(), false);
 
@@ -40,8 +46,10 @@ public class SimpleGeneticAlgorithm {
         }
 
         for (int i = elitismOffset; i < pop.getIndividuals().size(); i++) {
-            Individual indiv1 = tournamentSelection(pop);
-            Individual indiv2 = tournamentSelection(pop);
+//            Individual indiv1 = tournamentSelection(pop);
+//            Individual indiv2 = tournamentSelection(pop);
+            Individual indiv1 = selectParent(pop);
+            Individual indiv2 = selectParent(pop);
             Individual newIndiv = crossover(indiv1, indiv2);
             newPopulation.getIndividuals().add(i, newIndiv);
         }
@@ -54,8 +62,9 @@ public class SimpleGeneticAlgorithm {
     }
 
     private Individual crossover(Individual indiv1, Individual indiv2) {
-        Individual newSol = new Individual();
-        for (int i = 0; i < newSol.getDefaultGeneLength(); i++) {
+        int length = indiv1.getGeneLength();
+        Individual newSol = new Individual(length);
+        for (int i = 0; i < length; i++) {
             if (Math.random() <= uniformRate) {
                 newSol.setSingleGene(i, indiv1.getSingleGene(i));
             } else {
@@ -66,7 +75,7 @@ public class SimpleGeneticAlgorithm {
     }
 
     private void mutate(Individual indiv) {
-        for (int i = 0; i < indiv.getDefaultGeneLength(); i++) {
+        for (int i = 0; i < indiv.getGeneLength(); i++) {
             if (Math.random() <= mutationRate) {
                 byte gene = (byte) Math.round(Math.random());
                 indiv.setSingleGene(i, gene);
@@ -84,9 +93,26 @@ public class SimpleGeneticAlgorithm {
         return fittest;
     }
 
+    private Individual rouletteSelection(Population pop)
+    {
+        int totalFitness = pop.getIndividuals().stream().mapToInt(Individual::getFitness).sum();
+        int roulettePoint = (int) (Math.random() * totalFitness);
+        int runningSum = 0;
+
+        for (Individual indiv : pop.getIndividuals()) {
+            runningSum += indiv.getFitness();
+            if (runningSum >= roulettePoint) {
+                return indiv;
+            }
+        }
+        return pop.getIndividual(pop.size() - 1);
+    }
+
+
     protected static int getFitness(Individual individual) {
         int fitness = 0;
-        for (int i = 0; i < individual.getDefaultGeneLength() && i < solution.length; i++) {
+        int minLength = Math.min(individual.getGeneLength(), solution.length);
+        for (int i = 0; i < minLength; i++) {
             if (individual.getSingleGene(i) == solution[i]) {
                 fitness++;
             }
@@ -95,20 +121,27 @@ public class SimpleGeneticAlgorithm {
     }
 
     protected int getMaxFitness() {
-        int maxFitness = solution.length;
-        return maxFitness;
+        return solution.length;
     }
+
 
     protected void setSolution(String newSolution) {
         solution = new byte[newSolution.length()];
         for (int i = 0; i < newSolution.length(); i++) {
-            String character = newSolution.substring(i, i + 1);
-            if (character.contains("0") || character.contains("1")) {
-                solution[i] = Byte.parseByte(character);
-            } else {
-                solution[i] = 0;
-            }
+            solution[i] = Byte.parseByte(newSolution.substring(i, i + 1));
         }
     }
+
+    private Individual selectParent(Population pop)
+    {
+
+        if (SELECTION_METHOD.equalsIgnoreCase("tournament"))
+        {
+            return tournamentSelection(pop);
+        } else {
+            return rouletteSelection(pop);
+        }
+    }
+
 
 }

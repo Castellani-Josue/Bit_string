@@ -1,15 +1,25 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.baeldung</groupId>
     <artifactId>algorithms-genetic</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>algorithms-genetic</name>
-    
-    <parent>
-        <groupId>com.baeldung</groupId>
-        <artifactId>parent-modules</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-    </parent>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+
+        <commons-math3.version>3.6.1</commons-math3.version>
+        <io.jenetics.version>3.7.0</io.jenetics.version>
+        <org.assertj.core.version>3.9.0</org.assertj.core.version>
+        <commons-codec.version>1.13</commons-codec.version>
+        <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -36,23 +46,25 @@
     </dependencies>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>exec-maven-plugin</artifactId>
-                    <version>${exec-maven-plugin.version}</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+        <plugins>
+            <!-- Compiler plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>21</source>
+                    <target>21</target>
+                </configuration>
+            </plugin>
+
+            <!-- Exec plugin to run Java classes -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec-maven-plugin.version}</version>
+            </plugin>
+        </plugins>
     </build>
 
-    <properties>
-        <commons-math3.version>3.6.1</commons-math3.version>
-        <io.jenetics.version>3.7.0</io.jenetics.version>
-        <org.assertj.core.version>3.9.0</org.assertj.core.version>
-        <commons-codec.version>1.11</commons-codec.version>
-    </properties>
-
-    
 </project>

@@ -3,19 +3,19 @@ package com.baeldung.algorithms.ga.binary;
 
 public class Individual {
 
-    public int getDefaultGeneLength() {
-        return defaultGeneLength;
-    }
 
-    protected int defaultGeneLength = 64;
-    private byte[] genes = new byte[defaultGeneLength];
+    private byte[] genes;
     private int fitness = 0;
 
-    public Individual() {
+    public Individual(int length) {
+        genes = new byte[length];
         for (int i = 0; i < genes.length; i++) {
-            byte gene = (byte) Math.round(Math.random());
-            genes[i] = gene;
+            genes[i] = (byte) Math.round(Math.random());
         }
+    }
+
+    public int getGeneLength() {
+        return genes.length;
     }
 
     protected byte getSingleGene(int index) {
@@ -36,11 +36,11 @@ public class Individual {
 
     @Override
     public String toString() {
-        String geneString = "";
+        StringBuilder geneString = new StringBuilder();
         for (int i = 0; i < genes.length; i++) {
-            geneString += getSingleGene(i);
+            geneString.append(getSingleGene(i));
         }
-        return geneString;
+        return geneString.toString();
     }
 
 }

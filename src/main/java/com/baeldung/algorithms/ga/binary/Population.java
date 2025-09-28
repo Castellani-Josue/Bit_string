@@ -8,7 +8,7 @@ public class Population {
     private List<Individual> individuals;
 
     public Population(int size, boolean createNew) {
-        individuals = new ArrayList<>();
+        individuals = new ArrayList<Individual>();
         if (createNew) {
             createNewPopulation(size);
         }
@@ -30,12 +30,16 @@ public class Population {
 
     private void createNewPopulation(int size) {
         for (int i = 0; i < size; i++) {
-            Individual newIndividual = new Individual();
+            Individual newIndividual = new Individual(SimpleGeneticAlgorithm.solution.length);
             individuals.add(i, newIndividual);
         }
     }
 
     public List<Individual> getIndividuals() {
         return individuals;
+    }
+
+    public int size() {
+        return individuals.size();
     }
 }
