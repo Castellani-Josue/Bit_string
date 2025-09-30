@@ -3,13 +3,15 @@ package com.baeldung.algorithms.ga.binary;
 public class SimpleGeneticAlgorithm {
 
     private static final double uniformRate = 0.5;
-    private static final double mutationRate = 0.025;
+    private static final double flipMutationRate = 0.025;
+    private static final double addMutationRate = 0.01;
+    private static final double removeMutationRate = 0.01;
     private static final int tournamentSize = 5;
     private static final boolean elitism = true;
     public static byte[] solution;
-    private static final int maxGenerations = 150;
-    private static final int min_gene_length = 8;
-    private static final int max_gene_length = 64;
+    private static final int maxGenerations = 200;
+    static final int min_gene_length = 20;
+    static final int max_gene_length = 100;
     private static final String selection_method = "roulette"; // "tournament" or "roulette"
 
 
@@ -23,8 +25,10 @@ public class SimpleGeneticAlgorithm {
         int generationCount = 1;
         while (myPop.getFittest().getFitness() < getMaxFitness() && generationCount <= maxGenerations)
         {
-            System.out.println("Generation: " + generationCount + " Correct genes found: " + myPop.getFittest().getFitness());
+            Individual fittest = myPop.getFittest();
+            System.out.println("Generation: " + generationCount + " Correct genes found: " + getMatchingBits(fittest));
             myPop = evolvePopulation(myPop);
+            System.out.println(myPop.getFittest());
             generationCount++;
         }
         System.out.println("Solution found!");
@@ -63,26 +67,56 @@ public class SimpleGeneticAlgorithm {
     }
 
     private Individual crossover(Individual indiv1, Individual indiv2) {
-        int length = indiv1.getGeneLength();
-        Individual newSol = new Individual(length);
-        for (int i = 0; i < length; i++) {
+        int minLength = Math.min(indiv1.getGeneLength(), indiv2.getGeneLength());
+        Individual newSol = new Individual(minLength);
+        for (int i = 0; i < minLength; i++) {
             if (Math.random() <= uniformRate) {
                 newSol.setSingleGene(i, indiv1.getSingleGene(i));
             } else {
                 newSol.setSingleGene(i, indiv2.getSingleGene(i));
             }
         }
+
+        // gérer les bits supplémentaires du parent le plus long
+        Individual longerParent = (indiv1.getGeneLength() > indiv2.getGeneLength()) ? indiv1 : indiv2;
+        int extraBits = longerParent.getGeneLength() - minLength;
+
+        for (int i = 0; i < extraBits; i++) {
+            if (Math.random() < 0.5) { // 50% chance de garder le bit
+                newSol.addGene(newSol.getGeneLength(), longerParent.getSingleGene(minLength + i));
+            }
+        }
+
         return newSol;
     }
 
     private void mutate(Individual indiv) {
         for (int i = 0; i < indiv.getGeneLength(); i++) {
-            if (Math.random() <= mutationRate) {
+            if (Math.random() <= flipMutationRate) {
                 byte gene = (byte) Math.round(Math.random());
                 indiv.setSingleGene(i, gene);
             }
         }
+
+        // Ajout d'un gène
+       if (Math.random() <= addMutationRate && indiv.getGeneLength() < max_gene_length)
+        {
+            int pos = (int)(Math.random() * (indiv.getGeneLength() + 1));
+            byte gene = (byte) Math.round(Math.random());
+            indiv.addGene(pos, gene); // à coder dans Individual
+        }
+
+        // Suppression d'un gène
+        if (Math.random() <= removeMutationRate && indiv.getGeneLength() > min_gene_length)
+        {
+            int pos = (int)(Math.random() * (indiv.getGeneLength()));
+            indiv.removeGene(pos); // à coder dans Individual
+
+        }
+
+
     }
+
 
     private Individual tournamentSelection(Population pop) {
         Population tournament = new Population(tournamentSize, false);
@@ -112,19 +146,22 @@ public class SimpleGeneticAlgorithm {
 
     protected static int getFitness(Individual individual)
     {
+
         int minLength = Math.min(individual.getGeneLength(), solution.length);
-        int maxLength = Math.max(individual.getGeneLength(), solution.length);
+        //System.out.println("minLength: " + minLength);
 
         int matchingBits = 0;
         for (int i = 0; i < minLength; i++)
         {
+            Individual individual1 = individual;
+            //System.out.println(i + " " + individual1.getGeneLength());
             if (individual.getSingleGene(i) == solution[i])
             {
                 matchingBits++;
             }
         }
 
-        int extraBits = maxLength - minLength;
+        int extraBits = Math.abs(individual.getGeneLength() - solution.length);
         double rawFitness = matchingBits - (extraBits / 2.0);
 
         // Normalisation en pourcentage
@@ -135,6 +172,17 @@ public class SimpleGeneticAlgorithm {
 
     protected int getMaxFitness() {
         return 100; // puisque maintenant la fitness est un pourcentage
+    }
+
+    protected static int getMatchingBits(Individual individual) {
+        int minLength = Math.min(individual.getGeneLength(), solution.length);
+        int matchingBits = 0;
+        for (int i = 0; i < minLength; i++) {
+            if (individual.getSingleGene(i) == solution[i]) {
+                matchingBits++;
+            }
+        }
+        return matchingBits;
     }
 
 

@@ -34,6 +34,39 @@ public class Individual {
         return fitness;
     }
 
+    protected void addGene(int index, byte value) {
+        byte[] newGenes = new byte[genes.length + 1];
+
+        // copie avant la position
+        for (int i = 0; i < index; i++) {
+            newGenes[i] = genes[i];
+        }
+
+        // insère le nouveau
+        newGenes[index] = value;
+
+        // copie le reste
+        for (int i = index; i < genes.length; i++) {
+            newGenes[i + 1] = genes[i];
+        }
+
+        genes = newGenes;
+        fitness = 0;
+    }
+
+    protected void removeGene(int index)
+    {
+        byte[] newGenes = new byte[genes.length - 1];
+        for (int i = 0, j = 0; i < genes.length; i++) {
+            if (i != index) {
+                newGenes[j++] = genes[i];
+            }
+        }
+        genes = newGenes;
+        fitness = 0;
+    }
+
+
     @Override
     public String toString() {
         StringBuilder geneString = new StringBuilder();

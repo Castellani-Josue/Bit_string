@@ -7,6 +7,8 @@ public class Population {
 
     private List<Individual> individuals;
 
+
+
     public Population(int size, boolean createNew) {
         individuals = new ArrayList<Individual>();
         if (createNew) {
@@ -30,7 +32,10 @@ public class Population {
 
     private void createNewPopulation(int size) {
         for (int i = 0; i < size; i++) {
-            Individual newIndividual = new Individual(SimpleGeneticAlgorithm.solution.length);
+            int geneLength = SimpleGeneticAlgorithm.min_gene_length
+                    + (int)(Math.random() * (SimpleGeneticAlgorithm.max_gene_length - SimpleGeneticAlgorithm.min_gene_length + 1));
+            Individual newIndividual = new Individual(geneLength);
+            //System.out.println("New individual of length " + newIndividual.getGeneLength());
             individuals.add(i, newIndividual);
         }
     }
