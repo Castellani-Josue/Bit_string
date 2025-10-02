@@ -12,7 +12,7 @@ public class SimpleGeneticAlgorithm {
     private static final int maxGenerations = 200;
     static final int min_gene_length = 20;
     static final int max_gene_length = 100;
-    private static final String selection_method = "roulette"; // "tournament" or "roulette"
+    private static final String selection_method = "tournament"; // "tournament" or "roulette"
 
 
     public boolean runAlgorithm(int populationSize, String solution) {
@@ -26,7 +26,7 @@ public class SimpleGeneticAlgorithm {
         while (myPop.getFittest().getFitness() < getMaxFitness() && generationCount <= maxGenerations)
         {
             Individual fittest = myPop.getFittest();
-            System.out.println("Generation: " + generationCount + " Correct genes found: " + getMatchingBits(fittest));
+            System.out.println("Generation: " + generationCount + " Correct genes found: " + getMatchingBits(fittest) + "  Fitness: " + fittest.getFitness());
             myPop = evolvePopulation(myPop);
             System.out.println(myPop.getFittest());
             generationCount++;
@@ -103,14 +103,14 @@ public class SimpleGeneticAlgorithm {
         {
             int pos = (int)(Math.random() * (indiv.getGeneLength() + 1));
             byte gene = (byte) Math.round(Math.random());
-            indiv.addGene(pos, gene); // à coder dans Individual
+            indiv.addGene(pos, gene);
         }
 
         // Suppression d'un gène
         if (Math.random() <= removeMutationRate && indiv.getGeneLength() > min_gene_length)
         {
             int pos = (int)(Math.random() * (indiv.getGeneLength()));
-            indiv.removeGene(pos); // à coder dans Individual
+            indiv.removeGene(pos);
 
         }
 
@@ -167,11 +167,12 @@ public class SimpleGeneticAlgorithm {
         // Normalisation en pourcentage
         double normalizedFitness = Math.max(0, rawFitness) / solution.length;
 
-        return (int) Math.round(normalizedFitness * 100);
+        return (int) Math.round(normalizedFitness * 10000);
     }
 
-    protected int getMaxFitness() {
-        return 100; // puisque maintenant la fitness est un pourcentage
+    protected int getMaxFitness()
+    {
+        return 9000;
     }
 
     protected static int getMatchingBits(Individual individual) {
