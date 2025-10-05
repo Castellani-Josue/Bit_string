@@ -7,7 +7,8 @@ public class SimpleGeneticAlgorithm {
     private static final double addMutationRate = 0.01;
     private static final double removeMutationRate = 0.01;
     private static final int tournamentSize = 5;
-    private static final boolean elitism = true;
+    //private static final boolean elitism = true;
+    private static final int elitismCount = 3;
     public static byte[] solution;
     private static final int maxGenerations = 200;
     static final int min_gene_length = 20;
@@ -40,14 +41,18 @@ public class SimpleGeneticAlgorithm {
 
     public Population evolvePopulation(Population pop)
     {
-        int elitismOffset;
+        int elitismOffset = 0;
         Population newPopulation = new Population(pop.getIndividuals().size(), false);
 
-        if (elitism) {
-            newPopulation.getIndividuals().add(0, pop.getFittest());
-            elitismOffset = 1;
-        } else {
-            elitismOffset = 0;
+        if (elitismCount > 0) {
+            // Trier la population par fitness décroissante
+            pop.getIndividuals().sort((a, b) -> Integer.compare(b.getFitness(), a.getFitness()));
+
+            // Conserver les elitismCount meilleurs individus
+            for (int i = 0; i < elitismCount && i < pop.size(); i++) {
+                newPopulation.getIndividuals().add(pop.getIndividuals().get(i));
+                elitismOffset++;
+            }
         }
 
         for (int i = elitismOffset; i < pop.getIndividuals().size(); i++) {
