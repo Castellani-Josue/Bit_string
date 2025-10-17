@@ -2,18 +2,88 @@ package com.baeldung.algorithms.ga.binary;
 
 public class SimpleGeneticAlgorithm {
 
-    private static final double uniformRate = 0.5;
-    private static final double flipMutationRate = 0.025;
-    private static final double addMutationRate = 0.01;
-    private static final double removeMutationRate = 0.01;
-    private static final int tournamentSize = 5;
-    //private static final boolean elitism = true;
-    private static final int elitismCount = 3;
+//    private static final double uniformRate = 0.5;
+//    private static final double flipMutationRate = 0.025;
+//    private static final double addMutationRate = 0.01;
+//    private static final double removeMutationRate = 0.01;
+//    private static final int tournamentSize = 5;
+//    //private static final boolean elitism = true;
+//    private static final int elitismCount = 3;
+//    public static byte[] solution;
+//    private static final int maxGenerations = 1000;
+//    static final int min_gene_length = 20;
+//    static final int max_gene_length = 100;
+//    private static final String selection_method = "roulette"; // "tournament" or "roulette"
+//    private Individual lastSolution = new Individual(0);
+
+
+    private double uniformRate;
+    private double flipMutationRate;
+    private double addMutationRate;
+    private double removeMutationRate;
+    private int tournamentSize;
+    private int elitismCount;
     public static byte[] solution;
-    private static final int maxGenerations = 200;
-    static final int min_gene_length = 20;
-    static final int max_gene_length = 100;
-    private static final String selection_method = "tournament"; // "tournament" or "roulette"
+    private int maxGenerations;
+    public static int min_gene_length;
+    public static int max_gene_length;
+    private String selection_method;
+    private Individual lastSolution = new Individual(0);
+
+    // Constructeur par défaut avec valeurs par défaut
+    public SimpleGeneticAlgorithm() {
+        this.uniformRate = 0.5;
+        this.flipMutationRate = 0.025;
+        this.addMutationRate = 0.01;
+        this.removeMutationRate = 0.01;
+        this.tournamentSize = 5;
+        this.elitismCount = 3;
+        this.maxGenerations = 1000;
+        this.min_gene_length = 20;
+        this.max_gene_length = 100;
+        this.selection_method = "roulette";
+    }
+
+    // Setters pour tous les paramètres
+    public void setUniformRate(double uniformRate) {
+        this.uniformRate = uniformRate;
+    }
+
+    public void setFlipMutationRate(double flipMutationRate) {
+        this.flipMutationRate = flipMutationRate;
+    }
+
+    public void setAddMutationRate(double addMutationRate) {
+        this.addMutationRate = addMutationRate;
+    }
+
+    public void setRemoveMutationRate(double removeMutationRate) {
+        this.removeMutationRate = removeMutationRate;
+    }
+
+    public void setTournamentSize(int tournamentSize) {
+        this.tournamentSize = tournamentSize;
+    }
+
+    public void setElitismCount(int elitismCount) {
+        this.elitismCount = elitismCount;
+    }
+
+    public void setMaxGenerations(int maxGenerations) {
+        this.maxGenerations = maxGenerations;
+    }
+
+    public void setMinGeneLength(int min_gene_length) {
+        this.min_gene_length = min_gene_length;
+    }
+
+    public void setMaxGeneLength(int max_gene_length) {
+        this.max_gene_length = max_gene_length;
+    }
+
+    public void setSelectionMethod(String selection_method) {
+        this.selection_method = selection_method;
+    }
 
 
     public boolean runAlgorithm(int populationSize, String solution) {
@@ -30,9 +100,11 @@ public class SimpleGeneticAlgorithm {
             System.out.println("Generation: " + generationCount + " Correct genes found: " + getMatchingBits(fittest) + "  Fitness: " + fittest.getFitness());
             myPop = evolvePopulation(myPop);
             System.out.println(myPop.getFittest());
+            lastSolution = myPop.getFittest();
             generationCount++;
         }
         System.out.println("Solution found!");
+        System.out.println("Correct genes found : " + getMatchingBits(lastSolution));
         System.out.println("Generation: " + generationCount);
         System.out.println("Genes: ");
         System.out.println(myPop.getFittest());
@@ -177,7 +249,7 @@ public class SimpleGeneticAlgorithm {
 
     protected int getMaxFitness()
     {
-        return 9000;
+        return 10000;
     }
 
     protected static int getMatchingBits(Individual individual) {
