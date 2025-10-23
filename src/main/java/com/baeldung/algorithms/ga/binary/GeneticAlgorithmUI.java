@@ -91,11 +91,11 @@ public class GeneticAlgorithmUI extends JFrame {
 
         panel.add(createSectionLabel("Taux de Mutation"));
         flipMutationField = addFormField(panel, "Flip mutation:", "0.025");
-        addMutationField = addFormField(panel, "Ajout de gène:", "0.01");
+        addMutationField = addFormField(panel, "Ajout de gene:", "0.01");
         removeMutationField = addFormField(panel, "Suppression de gène:", "0.01");
         panel.add(Box.createVerticalStrut(15));
 
-        panel.add(createSectionLabel("Crossover & Sélection"));
+        panel.add(createSectionLabel("Crossover & Selection"));
         uniformRateField = addFormField(panel, "Taux de crossover:", "0.5");
 
         JPanel selectionPanel = new JPanel(new BorderLayout(10, 5));
@@ -118,7 +118,7 @@ public class GeneticAlgorithmUI extends JFrame {
         maxGenerationsField = addFormField(panel, "Generations max:", "1000");
         panel.add(Box.createVerticalStrut(15));
 
-        panel.add(createSectionLabel("Longueur des Gènes"));
+        panel.add(createSectionLabel("Longueur des Genes"));
         minGeneLengthField = addFormField(panel, "Longueur minimale:", "20");
         maxGeneLengthField = addFormField(panel, "Longueur maximale:", "100");
         panel.add(Box.createVerticalStrut(20));
@@ -273,15 +273,15 @@ public class GeneticAlgorithmUI extends JFrame {
                         ga.setMaxGeneLength(maxGeneLength);
                         ga.setSelectionMethod(selectionMethod);
 
-                        System.out.println("=== Démarrage de l'algorithme génétique ===");
-                        System.out.println("Paramètres:");
+                        System.out.println("=== Demarrage de l'algorithme genetique ===");
+                        System.out.println("Parametres:");
                         System.out.println("  - Taille de population: " + populationSize);
                         System.out.println("  - Solution cible: " + solution);
-                        System.out.println("  - Méthode de sélection: " + selectionMethod);
+                        System.out.println("  - Methode de selection: " + selectionMethod);
                         System.out.println("  - Taux de crossover: " + uniformRate);
                         System.out.println("  - Taux de mutation (flip): " + flipMutation);
-                        System.out.println("  - Élitisme: " + elitismCount + " individus");
-                        System.out.println("  - Générations max: " + maxGenerations);
+                        System.out.println("  - Elitisme: " + elitismCount + " individus");
+                        System.out.println("  - Generations max: " + maxGenerations);
                         System.out.println("==========================================\n");
 
                         ga.runAlgorithm(populationSize, solution);
