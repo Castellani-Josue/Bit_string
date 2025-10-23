@@ -31,7 +31,8 @@ public class SimpleGeneticAlgorithm {
     private Individual lastSolution = new Individual(0);
 
     // Constructeur par défaut avec valeurs par défaut
-    public SimpleGeneticAlgorithm() {
+    public SimpleGeneticAlgorithm()
+    {
         this.uniformRate = 0.5;
         this.flipMutationRate = 0.025;
         this.addMutationRate = 0.01;
@@ -45,48 +46,59 @@ public class SimpleGeneticAlgorithm {
     }
 
     // Setters pour tous les paramètres
-    public void setUniformRate(double uniformRate) {
+    public void setUniformRate(double uniformRate)
+    {
         this.uniformRate = uniformRate;
     }
 
-    public void setFlipMutationRate(double flipMutationRate) {
+    public void setFlipMutationRate(double flipMutationRate)
+    {
         this.flipMutationRate = flipMutationRate;
     }
 
-    public void setAddMutationRate(double addMutationRate) {
+    public void setAddMutationRate(double addMutationRate)
+    {
         this.addMutationRate = addMutationRate;
     }
 
-    public void setRemoveMutationRate(double removeMutationRate) {
+    public void setRemoveMutationRate(double removeMutationRate)
+    {
         this.removeMutationRate = removeMutationRate;
     }
 
-    public void setTournamentSize(int tournamentSize) {
+    public void setTournamentSize(int tournamentSize)
+    {
         this.tournamentSize = tournamentSize;
     }
 
-    public void setElitismCount(int elitismCount) {
+    public void setElitismCount(int elitismCount)
+    {
         this.elitismCount = elitismCount;
     }
 
-    public void setMaxGenerations(int maxGenerations) {
+    public void setMaxGenerations(int maxGenerations)
+    {
         this.maxGenerations = maxGenerations;
     }
 
-    public void setMinGeneLength(int min_gene_length) {
+    public void setMinGeneLength(int min_gene_length)
+    {
         this.min_gene_length = min_gene_length;
     }
 
-    public void setMaxGeneLength(int max_gene_length) {
+    public void setMaxGeneLength(int max_gene_length)
+    {
         this.max_gene_length = max_gene_length;
     }
 
-    public void setSelectionMethod(String selection_method) {
+    public void setSelectionMethod(String selection_method)
+    {
         this.selection_method = selection_method;
     }
 
 
-    public boolean runAlgorithm(int populationSize, String solution) {
+    public boolean runAlgorithm(int populationSize, String solution)
+    {
 //        if (solution.length() != SimpleGeneticAlgorithm.solution.length) {
 //            throw new RuntimeException("The solution needs to have " + SimpleGeneticAlgorithm.solution.length + " bytes");
 //        }
